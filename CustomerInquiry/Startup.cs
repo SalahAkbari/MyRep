@@ -1,4 +1,6 @@
 ﻿using CustomerInquiry.DbContext;
+using CustomerInquiry.Domain.DTOs;
+using CustomerInquiry.Domain.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +26,14 @@ namespace CustomerInquiry
 
             var conn = Configuration["connectionStrings:sqlConnection"];
             services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(conn));
+
+            AutoMapper.Mapper.Initialize(config =>
+            {
+                config.CreateMap<Transaction, TransactionDTO>();
+                config.CreateMap<TransactionDTO, Transaction>();
+                config.CreateMap<Customer, CustomerDTO>();
+                config.CreateMap<CustomerDTO, Customer>();
+            });
 
             // Register the Swagger generator
             services.AddSwaggerGen(c =>
