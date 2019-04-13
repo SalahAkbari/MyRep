@@ -32,8 +32,12 @@ namespace CustomerInquiry
 
             AutoMapper.Mapper.Initialize(config =>
             {
+                config.CreateMap<Transaction, TransactionBaseDTO>();
+                config.CreateMap<TransactionBaseDTO, Transaction>();
                 config.CreateMap<Transaction, TransactionDTO>();
                 config.CreateMap<TransactionDTO, Transaction>();
+                config.CreateMap<Customer, CustomerBaseDTO>();
+                config.CreateMap<CustomerBaseDTO, Customer>();
                 config.CreateMap<Customer, CustomerDTO>();
                 config.CreateMap<CustomerDTO, Customer>();
             });
