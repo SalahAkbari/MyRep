@@ -1,4 +1,5 @@
-﻿using CustomerInquiry.DbContext;
+﻿using CustomerInquiry.DataAccess;
+using CustomerInquiry.DataAccess.DbContext;
 using CustomerInquiry.Domain.DTOs;
 using CustomerInquiry.Domain.Entities;
 using Microsoft.AspNetCore.Builder;
@@ -25,7 +26,9 @@ namespace CustomerInquiry
             services.AddMvc();
 
             var conn = Configuration["connectionStrings:sqlConnection"];
-            services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(conn));
+            services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(conn, b => b.MigrationsAssembly(typeof(Startup).Assembly.FullName)));
+
+            services.AddScoped(typeof(IGenericEFRepository<>), typeof(GenericEFRepository<>));
 
             AutoMapper.Mapper.Initialize(config =>
             {

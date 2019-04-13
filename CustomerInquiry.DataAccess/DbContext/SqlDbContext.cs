@@ -1,7 +1,7 @@
 ﻿using CustomerInquiry.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CustomerInquiry.DbContext
+namespace CustomerInquiry.DataAccess.DbContext
 {
     public class SqlDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
