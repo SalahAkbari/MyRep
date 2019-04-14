@@ -15,6 +15,7 @@ namespace CustomerInquiry.Domain.Entities
         [Required]
         [MaxLength(30)]
         public string CustomerName { get; set; }
+        [MaxLength(25)]
         public string ContactEmail { get; set; }
         [Required(ErrorMessage = "You must provide a Mobile number")]
         [Display(Name = "Mobile No")]

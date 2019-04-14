@@ -1,37 +1,36 @@
 ﻿using AutoMapper;
-using CustomerInquiry.DataAccess;
 using CustomerInquiry.Domain.DTOs;
 using CustomerInquiry.Domain.Entities;
+using CustomerInquiry.Provider;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace CustomerInquiry.Controllers
 {
     [Route("api/customers")]
     public class TransactionController : Controller
     {
-        IGenericEFRepository<Transaction> _rep;
-        public TransactionController(IGenericEFRepository<Transaction> rep)
+        private ITransactionProvider _provider;
+        public TransactionController(ITransactionProvider provider)
         {
-            _rep = rep;
+            _provider = provider;
         }
 
         [HttpGet("{customerId}/transaction")]
-        public IActionResult Get(int customerId)
+        public async Task<IActionResult> Get(int customerId)
         {
-            var items = _rep.Get().Where(b => b.CustomerId.Equals(customerId));
-            var DTOs = Mapper.Map<IEnumerable<TransactionDTO>>(items);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var DTOs = await _provider.GetAllTransactions(customerId);
             return Ok(DTOs);
         }
 
         [HttpGet("{customerId}/transaction/{id}", Name = "GetTransaction")]
-        public IActionResult Get(int customerId, int id)
+        public async Task<IActionResult> Get(int customerId, int id)
         {
-            var item = _rep.Get(id);
-            if (item == null || !item.CustomerId.Equals(customerId)) return NotFound();//404 Not Found (Client Error Status Code)
-            var DTO = Mapper.Map<TransactionDTO>(item);
-            return Ok(DTO);//Get Successfull (Success Status Code)
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var item = await _provider.GetTransaction(customerId, id);
+            if (item == null) return NotFound();//404 Not Found (Client Error Status Code)
+            return Ok(item);//Get Successfull (Success Status Code)
         }
 
         //You might wonder why the ids are sent in as separate parameters as opposed to 
@@ -45,23 +44,19 @@ namespace CustomerInquiry.Controllers
         {
             if (DTO == null) return BadRequest();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var itemToCreate = Mapper.Map<Transaction>(DTO);
-            itemToCreate.CustomerId = customerId;
-            _rep.Add(itemToCreate);
-            if (!_rep.Save()) return StatusCode(500, "A problem occurred while handling your request.");
-            var createdDTO = Mapper.Map<TransactionDTO>(itemToCreate);
-            return CreatedAtRoute("GetTransaction", new { id = createdDTO.TransactionID }, createdDTO);
+            var result = _provider.AddTransaction(customerId, DTO);
+            if (result == null) return StatusCode(500, "A problem occurred while handling your request.");
+            return CreatedAtRoute("GetTransaction", new { id = result.TransactionID }, result);
         }
 
 
         [HttpDelete("{customerId}/transaction/{id}")]
-        public IActionResult Delete(int customerId, int id)
+        public async Task<IActionResult> Delete(int customerId, int id)
         {
-            if (!_rep.Exists(id)) return NotFound();
-            var entityToDelete = _rep.Get(id);
-            _rep.Delete(entityToDelete);
-            if (!_rep.Save()) return StatusCode(500,
-            "A problem occurred while handling your request.");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _provider.DeleteTransaction(id);
+            if (!result.Value) return NotFound();
+            if (result == null) return StatusCode(500, "A problem occurred while handling your request.");
             return NoContent();
         }
     }

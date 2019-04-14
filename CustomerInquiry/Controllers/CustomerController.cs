@@ -1,36 +1,33 @@
-﻿using AutoMapper;
-using CustomerInquiry.DataAccess;
-using CustomerInquiry.Domain.DTOs;
-using CustomerInquiry.Domain.Entities;
+﻿using CustomerInquiry.Domain.DTOs;
+using CustomerInquiry.Provider;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CustomerInquiry.Controllers
 {
     [Route("api/customers")]
     public class CustomerController : Controller
     {
-        IGenericEFRepository<Customer> _rep;
-        public CustomerController(IGenericEFRepository<Customer> rep)
+        private ICustomerProvider _provider;
+        public CustomerController(ICustomerProvider provider)
         {
-            _rep = rep;
+            _provider = provider;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var item = _rep.Get();
-            var DTOs = Mapper.Map<IEnumerable<CustomerDTO>>(item);
+            var DTOs = await _provider.GetAllCustomers();
             return Ok(DTOs);
         }
 
         [HttpGet("{id}", Name = "GetCustomer")]
-        public IActionResult Get(int id, bool includeRelatedEntities = false)
+        public async Task<IActionResult> Get(int id, bool includeRelatedEntities = false)
         {
-            var item = _rep.Get(id, includeRelatedEntities);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var item = await _provider.GetCustomer(id, includeRelatedEntities);
             if (item == null) return NotFound();//404 Not Found (Client Error Status Code)
-            var DTO = Mapper.Map<CustomerDTO>(item);
-            return Ok(DTO);//Get Successfull (Success Status Code)
+            return Ok(item);//Get Successfull (Success Status Code)
         }
 
         [HttpPost]
@@ -38,22 +35,18 @@ namespace CustomerInquiry.Controllers
         {
             if (DTO == null) return BadRequest();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var itemToCreate = Mapper.Map<Customer>(DTO);
-            _rep.Add(itemToCreate);
-            if (!_rep.Save())
-                return StatusCode(500, "A problem occurred while handling your request.");
-            var customerDTO = Mapper.Map<CustomerDTO>(itemToCreate);
-            return CreatedAtRoute("GetCustomer", new { id = customerDTO.CustomerID }, customerDTO);
+            var result = _provider.AddCustomer(DTO);
+            if(result == null) return StatusCode(500, "A problem occurred while handling your request.");
+            return CreatedAtRoute("GetCustomer", new { id = result.CustomerID }, result);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (!_rep.Exists(id)) return NotFound();
-            var entityToDelete = _rep.Get(id);
-            _rep.Delete(entityToDelete);
-            if (!_rep.Save()) return StatusCode(500,
-            "A problem occurred while handling your request.");
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var result = await _provider.DeleteCustomer(id);
+            if (!result.Value) return NotFound();
+            if (result == null) return StatusCode(500, "A problem occurred while handling your request.");
             return NoContent();
         }
     }

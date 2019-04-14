@@ -2,6 +2,7 @@
 using CustomerInquiry.DataAccess.DbContext;
 using CustomerInquiry.Domain.DTOs;
 using CustomerInquiry.Domain.Entities;
+using CustomerInquiry.Provider;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,9 @@ namespace CustomerInquiry
 
             var conn = Configuration["connectionStrings:sqlConnection"];
             services.AddDbContext<SqlDbContext>(options => options.UseSqlServer(conn, b => b.MigrationsAssembly(typeof(Startup).Assembly.FullName)));
+
+            services.AddScoped(typeof(ICustomerProvider), typeof(CustomerProvider));
+            services.AddScoped(typeof(ITransactionProvider), typeof(TransactionProvider));
 
             services.AddScoped(typeof(IGenericEFRepository<>), typeof(GenericEFRepository<>));
 

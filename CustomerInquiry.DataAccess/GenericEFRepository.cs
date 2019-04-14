@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace CustomerInquiry.DataAccess
 {
@@ -15,14 +16,14 @@ namespace CustomerInquiry.DataAccess
             _db = db;
         }
 
-        public IEnumerable<TEntity> Get()
+        public async Task<IEnumerable<TEntity>> Get()
         {
-            return _db.Set<TEntity>();
+            return await Task.FromResult(_db.Set<TEntity>());
         }
 
-        public TEntity Get(int id, bool includeRelatedEntities = false)
+        public async Task<TEntity> Get(int id, bool includeRelatedEntities = false)
         {
-            var entity = _db.Set<TEntity>().Find(new object[] { id });
+            var entity = await Task.FromResult(_db.Set<TEntity>().Find(new object[] { id }));
 
             if (entity != null && includeRelatedEntities)
             {

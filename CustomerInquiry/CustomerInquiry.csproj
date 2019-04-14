@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CustomerInquiry.DataAccess\CustomerInquiry.DataAccess.csproj" />
     <ProjectReference Include="..\CustomerInquiry.Domain\CustomerInquiry.Domain.csproj" />
+    <ProjectReference Include="..\CustomerInquiry.Provider\CustomerInquiry.Provider.csproj" />
   </ItemGroup>
 
 </Project>
