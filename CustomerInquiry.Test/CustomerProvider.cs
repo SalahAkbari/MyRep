@@ -19,10 +19,6 @@ namespace CustomerInquiry.Test
 
             AutoMapper.Mapper.Initialize(config =>
             {
-                //config.CreateMap<Transaction, TransactionBaseDTO>();
-                //config.CreateMap<TransactionBaseDTO, Transaction>();
-                //config.CreateMap<Transaction, TransactionDTO>();
-                //config.CreateMap<TransactionDTO, Transaction>();
                 config.CreateMap<Customer, CustomerBaseDTO>();
                 config.CreateMap<CustomerBaseDTO, Customer>();
                 config.CreateMap<Customer, CustomerDTO>();
@@ -53,8 +49,7 @@ namespace CustomerInquiry.Test
             {
                 var item = await _rep.GetCustomer(id, includeRelatedEntities);
                 if (item == null) return null;
-                var DTO = Mapper.Map<CustomerDTO>(item);
-                return DTO;
+                return item;
 
             }
             catch (Exception e)
