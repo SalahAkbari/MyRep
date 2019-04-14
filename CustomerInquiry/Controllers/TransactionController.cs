@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using CustomerInquiry.Domain.DTOs;
-using CustomerInquiry.Domain.Entities;
+﻿using CustomerInquiry.Domain.DTOs;
 using CustomerInquiry.Provider;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
