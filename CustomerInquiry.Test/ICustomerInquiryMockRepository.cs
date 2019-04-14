@@ -14,8 +14,8 @@ namespace CustomerInquiry.Test
         bool CustomerExists(int customerId);
         bool Save();
 
-        IEnumerable<TransactionDTO> GetTransactions(int customerId);
-        TransactionDTO GetTransaction(int customerId, int transactionId);
+        Task<IEnumerable<TransactionDTO>> GetTransactions(int customerId);
+        Task<TransactionDTO> GetTransaction(int customerId, int transactionId);
         void AddTransaction(TransactionDTO transaction);
     }
 }

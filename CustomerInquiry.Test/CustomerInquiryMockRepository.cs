@@ -41,15 +41,15 @@ namespace CustomerInquiry.Test
             return MockData.Current.Customers.Count(p => p.CustomerID.Equals(CustomerId)).Equals(1);
         }
 
-        public IEnumerable<TransactionDTO> GetTransactions(int customerId)
+        public async Task<IEnumerable<TransactionDTO>> GetTransactions(int customerId)
         {
-            return MockData.Current.Transactions.Where(b => b.CustomerId.Equals(customerId));
+            return await Task.FromResult(MockData.Current.Transactions.Where(b => b.CustomerId.Equals(customerId)));
         }
 
-        public TransactionDTO GetTransaction(int customerId, int transactionId)
+        public async Task<TransactionDTO> GetTransaction(int customerId, int transactionId)
         {
-            return MockData.Current.Transactions.FirstOrDefault(b => b.CustomerId.Equals(customerId) 
-                     && b.TransactionID.Equals(transactionId));
+            return await Task.FromResult(MockData.Current.Transactions.FirstOrDefault(b => b.CustomerId.Equals(customerId) 
+                     && b.TransactionID.Equals(transactionId)));
         }
 
         public void AddTransaction(TransactionDTO transaction)
