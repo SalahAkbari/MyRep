@@ -5,14 +5,15 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CustomerInquiry.Provider;
 using System.Linq;
+using CustomerInquiry.DataAccess;
 
 namespace CustomerInquiry.Test
 {
     public class TransactionProvider : ITransactionProvider
     {
-        ICustomerInquiryMockRepository _rep;
+        readonly IGenericEfRepository<TransactionDto> _rep;
 
-        public TransactionProvider(ICustomerInquiryMockRepository rep)
+        public TransactionProvider(IGenericEfRepository<TransactionDto> rep)
         {
             _rep = rep;
 
@@ -27,9 +28,9 @@ namespace CustomerInquiry.Test
         {
             try
             {
-                var item = (await _rep.GetTransactions(customerId)).Where(b => b.CustomerId.Equals(customerId));
-                var DTOs = Mapper.Map<IEnumerable<TransactionDto>>(item);
-                return DTOs;
+                var item = (await _rep.Get()).Where(b => b.CustomerId.Equals(customerId));
+                var dtOs = Mapper.Map<IEnumerable<TransactionDto>>(item);
+                return dtOs;
             }
             catch (Exception e)
             {
@@ -42,7 +43,7 @@ namespace CustomerInquiry.Test
         {
             try
             {
-                var item = await _rep.GetTransaction(customerId,id);
+                var item = await _rep.Get(id);
                 if (item == null || !item.CustomerId.Equals(customerId)) return null;
                 return item;
             }
@@ -59,9 +60,8 @@ namespace CustomerInquiry.Test
             {
                 var itemToCreate = Mapper.Map<TransactionDto>(transaction);
                 itemToCreate.CustomerId = customerId;
-                _rep.AddTransaction(itemToCreate);
-                if (!_rep.Save()) return null;
-                return itemToCreate;
+                _rep.Add(itemToCreate);
+                return !_rep.Save() ? null : itemToCreate;
             }
             catch (Exception e)
             {

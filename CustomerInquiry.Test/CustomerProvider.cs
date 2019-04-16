@@ -12,9 +12,9 @@ namespace CustomerInquiry.Test
 {
     public class CustomerProvider : ICustomerProvider
     {
-        private readonly ICustomerInquiryMockRepository _rep;
+        private readonly IGenericEfRepository<CustomerDto> _rep;
 
-        public CustomerProvider(ICustomerInquiryMockRepository rep)
+        public CustomerProvider(IGenericEfRepository<CustomerDto> rep)
         {
             _rep = rep;
 
@@ -33,7 +33,7 @@ namespace CustomerInquiry.Test
         {
             try
             {
-                var item = await _rep.GetCustomers();
+                var item = await _rep.Get();
                 var dtOs = Mapper.Map<IEnumerable<CustomerDto>>(item);
                 return dtOs;
             }
@@ -48,7 +48,7 @@ namespace CustomerInquiry.Test
         {
             try
             {
-                var item = await _rep.GetCustomer(id, includeRelatedEntities);
+                var item = await _rep.Get(id, includeRelatedEntities);
                 return item;
             }
             catch (Exception e)
@@ -65,7 +65,7 @@ namespace CustomerInquiry.Test
                 var itemToCreate = Mapper.Map<CustomerDto>(customer);
                 var id = MockData.Current.Customers.AsEnumerable().Max(m => m.CustomerId) + 1;
                 itemToCreate.CustomerId = id;
-                _rep.AddCustomer(itemToCreate);
+                _rep.Add(itemToCreate);
                 //if (!_rep.Save()) return null;
                 return itemToCreate;
             }

@@ -4,6 +4,7 @@ using CustomerInquiry.Provider;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CustomerInquiry.DataAccess;
 using Xunit;
 
 namespace CustomerInquiry.Test
@@ -14,7 +15,7 @@ namespace CustomerInquiry.Test
 
         public TransactionControllerTest()
         {
-            ICustomerInquiryMockRepository repo = new CustomerInquiryMockRepository();
+            IGenericEfRepository<TransactionDto> repo = new TransactionMockRepository<TransactionDto>();
             ITransactionProvider provider = new TransactionProvider(repo);
             _controller = new TransactionController(provider);
         }

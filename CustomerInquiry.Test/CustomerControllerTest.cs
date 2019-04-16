@@ -6,6 +6,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CustomerInquiry.DataAccess;
 using Xunit;
 
 namespace CustomerInquiry.Test
@@ -13,29 +14,29 @@ namespace CustomerInquiry.Test
     public class CustomerControllerTest
     {
         readonly CustomerController _controller;
-        private readonly Mock<ICustomerInquiryMockRepository> _mockRepo;
+        private readonly Mock<IGenericEfRepository<CustomerDto>> _mockRepo;
 
 
         public CustomerControllerTest()
         {
-            _mockRepo = new Mock<ICustomerInquiryMockRepository>();
+            _mockRepo = new Mock<IGenericEfRepository<CustomerDto>>();
             ICustomerProvider provider = new CustomerProvider(_mockRepo.Object);
             _controller = new CustomerController(provider);
 
-            _mockRepo.Setup(m => m.GetCustomers())
+            _mockRepo.Setup(m => m.Get())
                 .Returns(Task.FromResult(MockData.Current.Customers.AsEnumerable()));
         }
 
         private void MoqSetup(int customerId)
         {
-            _mockRepo.Setup(x => x.GetCustomer(It.Is<int>(y => y == customerId), false))
+            _mockRepo.Setup(x => x.Get(It.Is<int>(y => y == customerId), false))
                 .Returns(Task.FromResult(MockData.Current.Customers
                     .FirstOrDefault(p => p.CustomerId.Equals(customerId))));
         }
 
         private void MoqSetupAdd(CustomerBaseDto testItem)
         {
-            _mockRepo.Setup(x => x.AddCustomer(It.Is<CustomerDto>(y => y == testItem)))
+            _mockRepo.Setup(x => x.Add(It.Is<CustomerDto>(y => y == testItem)))
                 .Callback<CustomerDto>(s => MockData.Current.Customers.Add(s));
         }
 
