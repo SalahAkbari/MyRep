@@ -10,22 +10,20 @@ namespace CustomerInquiry.Test
 {
     public class TransactionControllerTest
     {
-        TransactionController _controller;
-        ITransactionProvider _provider;
-        ICustomerInquiryMockRepository _repo;
+        readonly TransactionController _controller;
 
         public TransactionControllerTest()
         {
-            _repo = new CustomerInquiryMockRepository();
-            _provider = new TransactionProvider(_repo);
-            _controller = new TransactionController(_provider);
+            ICustomerInquiryMockRepository repo = new CustomerInquiryMockRepository();
+            ITransactionProvider provider = new TransactionProvider(repo);
+            _controller = new TransactionController(provider);
         }
 
         [Fact]
         public async Task Get_WhenCalled_ReturnsOkResult()
         {
             // Arrange
-            var testCustomerId = 2;
+            const int testCustomerId = 2;
 
             // Act
             var okResult = await _controller.Get(testCustomerId);
@@ -38,13 +36,13 @@ namespace CustomerInquiry.Test
         public async Task Get_WhenCalled_ReturnsAllItems()
         {
             // Arrange
-            var testCustomerId = 2;
+            const int testCustomerId = 2;
 
             // Act
             var okResult = await _controller.Get(testCustomerId) as OkObjectResult;
 
             // Assert
-            var items = Assert.IsType<List<TransactionDTO>>(okResult.Value);
+            var items = Assert.IsType<List<TransactionDto>>(okResult?.Value);
             Assert.Equal(2, items.Count);
         }
 
@@ -62,8 +60,8 @@ namespace CustomerInquiry.Test
         public async Task GetById_ExistingCustomerIdAndTransactionIdPassed_ReturnsOkResult()
         {
             // Arrange
-            var testCustomerId = 2;
-            var testTransactionId = 1;
+            const int testCustomerId = 2;
+            const int testTransactionId = 1;
 
             // Act
             var okResult = await _controller.Get(testCustomerId, testTransactionId);
@@ -83,9 +81,9 @@ namespace CustomerInquiry.Test
             var okResult = await _controller.Get(testCustomerId, testTransactionId) as OkObjectResult;
 
             // Assert
-            Assert.IsType<TransactionDTO>(okResult.Value);
-            Assert.Equal(testCustomerId, (okResult.Value as TransactionDTO).CustomerId);
-            Assert.Equal(testTransactionId, (okResult.Value as TransactionDTO).TransactionID);
+            Assert.IsType<TransactionDto>(okResult?.Value);
+            Assert.Equal(testCustomerId, ((TransactionDto) okResult.Value).CustomerId);
+            Assert.Equal(testTransactionId, ((TransactionDto) okResult.Value).TransactionId);
 
         }
     }

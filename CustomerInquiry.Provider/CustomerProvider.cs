@@ -10,20 +10,20 @@ namespace CustomerInquiry.Provider
 {
     public class CustomerProvider : ICustomerProvider
     {
-        IGenericEFRepository<Customer> _rep;
+        readonly IGenericEfRepository<Customer> _rep;
 
-        public CustomerProvider(IGenericEFRepository<Customer> rep)
+        public CustomerProvider(IGenericEfRepository<Customer> rep)
         {
             _rep = rep;
         }
 
-        public async Task<IEnumerable<CustomerDTO>> GetAllCustomers()
+        public async Task<IEnumerable<CustomerDto>> GetAllCustomers()
         {
             try
             {
                 var item = await _rep.Get();
-                var DTOs = Mapper.Map<IEnumerable<CustomerDTO>>(item);
-                return DTOs;
+                var dtOs = Mapper.Map<IEnumerable<CustomerDto>>(item);
+                return dtOs;
             }
             catch (Exception e)
             {
@@ -32,14 +32,14 @@ namespace CustomerInquiry.Provider
             }
         }
 
-        public async Task<CustomerDTO> GetCustomer(int id, bool includeRelatedEntities = false)
+        public async Task<CustomerDto> GetCustomer(int id, bool includeRelatedEntities = false)
         {
             try
             {
                 var item = await _rep.Get(id, includeRelatedEntities);
                 if (item == null) return null;
-                var DTO = Mapper.Map<CustomerDTO>(item);
-                return DTO;
+                var dto = Mapper.Map<CustomerDto>(item);
+                return dto;
 
             }
             catch (Exception e)
@@ -49,15 +49,15 @@ namespace CustomerInquiry.Provider
             }
         }
 
-        public CustomerDTO AddCustomer(CustomerBaseDTO customer)
+        public CustomerDto AddCustomer(CustomerBaseDto customer)
         {
             try
             {
                 var itemToCreate = Mapper.Map<Customer>(customer);
                 _rep.Add(itemToCreate);
                 if (!_rep.Save()) return null;
-                var customerDTO = Mapper.Map<CustomerDTO>(itemToCreate);
-                return customerDTO;
+                var customerDto = Mapper.Map<CustomerDto>(itemToCreate);
+                return customerDto;
             }
             catch (Exception e)
             {

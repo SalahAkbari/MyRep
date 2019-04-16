@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CustomerInquiry.DataAccess
 {
-    public class GenericEFRepository<TEntity> : IGenericEFRepository<TEntity>
+    public class GenericEfRepository<TEntity> : IGenericEfRepository<TEntity>
         where TEntity : class
     {
-        private SqlDbContext _db;
-        public GenericEFRepository(SqlDbContext db)
+        private readonly SqlDbContext _db;
+        public GenericEfRepository(SqlDbContext db)
         {
             _db = db;
         }
@@ -23,7 +23,7 @@ namespace CustomerInquiry.DataAccess
 
         public async Task<TEntity> Get(int id, bool includeRelatedEntities = false)
         {
-            var entity = await Task.FromResult(_db.Set<TEntity>().Find(new object[] { id }));
+            var entity = await Task.FromResult(_db.Set<TEntity>().Find(id));
 
             if (entity != null && includeRelatedEntities)
             {
@@ -39,7 +39,7 @@ namespace CustomerInquiry.DataAccess
                 .Where(z => dbsets.Contains(z.Name))
                 .Select(z => z.Name);
                 // Eager load all the tables referenced by the generic type T
-                if (tables.Count() > 0)
+                if (tables.Any())
                     foreach (var table in tables)
                         _db.Entry(entity).Collection(table).Load();
             }
@@ -59,7 +59,7 @@ namespace CustomerInquiry.DataAccess
 
         public bool Exists(int id)
         {
-            return _db.Set<TEntity>().Find(new object[] { id }) != null;
+            return _db.Set<TEntity>().Find(id) != null;
         }
 
         public void Delete(TEntity item) 

@@ -1,11 +1,8 @@
-﻿using CustomerInquiry.Domain.Enums;
-using System;
-
-namespace CustomerInquiry.Domain.DTOs
+﻿namespace CustomerInquiry.Domain.DTOs
 {
-    public class TransactionDTO : TransactionBaseDTO
+    public class TransactionDto : TransactionBaseDto
     {
-        public int TransactionID { get; set; }
+        public int TransactionId { get; set; }
         public int CustomerId { get; set; }
 
     }

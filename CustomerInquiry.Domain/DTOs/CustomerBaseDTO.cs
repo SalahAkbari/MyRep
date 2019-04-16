@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CustomerInquiry.Domain.DTOs
 {
-    public class CustomerBaseDTO
+    public class CustomerBaseDto
     {
         [Required]
         [MaxLength(30)]

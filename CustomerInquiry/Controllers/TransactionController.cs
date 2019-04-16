@@ -8,7 +8,7 @@ namespace CustomerInquiry.Controllers
     [Route("api/customers")]
     public class TransactionController : Controller
     {
-        private ITransactionProvider _provider;
+        private readonly ITransactionProvider _provider;
         public TransactionController(ITransactionProvider provider)
         {
             _provider = provider;
@@ -18,8 +18,8 @@ namespace CustomerInquiry.Controllers
         public async Task<IActionResult> Get(int customerId)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var DTOs = await _provider.GetAllTransactions(customerId);
-            return Ok(DTOs);
+            var dtOs = await _provider.GetAllTransactions(customerId);
+            return Ok(dtOs);
         }
 
         [HttpGet("{customerId}/transaction/{id}", Name = "GetTransaction")]
@@ -38,13 +38,13 @@ namespace CustomerInquiry.Controllers
         //you should check that they are the same as the ones in the URL before taking any action.
 
         [HttpPost("{customerId}/transaction")]
-        public IActionResult Post(int customerId, [FromBody]TransactionBaseDTO DTO)
+        public IActionResult Post(int customerId, [FromBody]TransactionBaseDto dto)
         {
-            if (DTO == null) return BadRequest();
+            if (dto == null) return BadRequest();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var result = _provider.AddTransaction(customerId, DTO);
+            var result = _provider.AddTransaction(customerId, dto);
             if (result == null) return StatusCode(500, "A problem occurred while handling your request.");
-            return CreatedAtRoute("GetTransaction", new { id = result.TransactionID }, result);
+            return CreatedAtRoute("GetTransaction", new { id = result.TransactionId }, result);
         }
 
 

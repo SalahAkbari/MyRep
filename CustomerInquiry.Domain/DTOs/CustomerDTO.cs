@@ -2,9 +2,9 @@
 
 namespace CustomerInquiry.Domain.DTOs
 {
-    public class CustomerDTO : CustomerBaseDTO
+    public class CustomerDto : CustomerBaseDto
     {
-        public int CustomerID { get; set; }
-        public ICollection<TransactionDTO> Transactions { get; set; } = new List<TransactionDTO>();
+        public int CustomerId { get; set; }
+        public ICollection<TransactionDto> Transactions { get; set; } = new List<TransactionDto>();
     }
 }

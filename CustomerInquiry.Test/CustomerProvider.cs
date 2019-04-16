@@ -3,6 +3,7 @@ using CustomerInquiry.Domain.DTOs;
 using CustomerInquiry.Domain.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CustomerInquiry.Provider;
@@ -11,7 +12,7 @@ namespace CustomerInquiry.Test
 {
     public class CustomerProvider : ICustomerProvider
     {
-        ICustomerInquiryMockRepository _rep;
+        private readonly ICustomerInquiryMockRepository _rep;
 
         public CustomerProvider(ICustomerInquiryMockRepository rep)
         {
@@ -19,22 +20,22 @@ namespace CustomerInquiry.Test
 
             AutoMapper.Mapper.Initialize(config =>
             {
-                config.CreateMap<Customer, CustomerBaseDTO>();
-                config.CreateMap<CustomerBaseDTO, Customer>();
-                config.CreateMap<Customer, CustomerDTO>();
-                config.CreateMap<CustomerDTO, Customer>();
-                config.CreateMap<CustomerBaseDTO, CustomerDTO>();
-                config.CreateMap<CustomerDTO, CustomerBaseDTO>();
+                config.CreateMap<Customer, CustomerBaseDto>();
+                config.CreateMap<CustomerBaseDto, Customer>();
+                config.CreateMap<Customer, CustomerDto>();
+                config.CreateMap<CustomerDto, Customer>();
+                config.CreateMap<CustomerBaseDto, CustomerDto>();
+                config.CreateMap<CustomerDto, CustomerBaseDto>();
             });
         }
 
-        public async Task<IEnumerable<CustomerDTO>> GetAllCustomers()
+        public async Task<IEnumerable<CustomerDto>> GetAllCustomers()
         {
             try
             {
                 var item = await _rep.GetCustomers();
-                var DTOs = Mapper.Map<IEnumerable<CustomerDTO>>(item);
-                return DTOs;
+                var dtOs = Mapper.Map<IEnumerable<CustomerDto>>(item);
+                return dtOs;
             }
             catch (Exception e)
             {
@@ -43,14 +44,12 @@ namespace CustomerInquiry.Test
             }
         }
 
-        public async Task<CustomerDTO> GetCustomer(int id, bool includeRelatedEntities = false)
+        public async Task<CustomerDto> GetCustomer(int id, bool includeRelatedEntities = false)
         {
             try
             {
                 var item = await _rep.GetCustomer(id, includeRelatedEntities);
-                if (item == null) return null;
                 return item;
-
             }
             catch (Exception e)
             {
@@ -59,13 +58,15 @@ namespace CustomerInquiry.Test
             }
         }
 
-        public CustomerDTO AddCustomer(CustomerBaseDTO customer)
+        public CustomerDto AddCustomer(CustomerBaseDto customer)
         {
             try
             {
-                var itemToCreate = Mapper.Map<CustomerDTO>(customer);
+                var itemToCreate = Mapper.Map<CustomerDto>(customer);
+                var id = MockData.Current.Customers.AsEnumerable().Max(m => m.CustomerId) + 1;
+                itemToCreate.CustomerId = id;
                 _rep.AddCustomer(itemToCreate);
-                if (!_rep.Save()) return null;
+                //if (!_rep.Save()) return null;
                 return itemToCreate;
             }
             catch (Exception e)

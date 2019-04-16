@@ -8,14 +8,14 @@ namespace CustomerInquiry.Test
 {
     public interface ICustomerInquiryMockRepository
     {
-        Task<IEnumerable<CustomerDTO>> GetCustomers();
-        Task<CustomerDTO> GetCustomer(int customerId, bool includeTransactions = false);
-        Task AddCustomer(CustomerDTO customer);
+        Task<IEnumerable<CustomerDto>> GetCustomers();
+        Task<CustomerDto> GetCustomer(int customerId, bool includeTransactions = false);
+        Task AddCustomer(CustomerDto customer);
         bool CustomerExists(int customerId);
         bool Save();
 
-        Task<IEnumerable<TransactionDTO>> GetTransactions(int customerId);
-        Task<TransactionDTO> GetTransaction(int customerId, int transactionId);
-        void AddTransaction(TransactionDTO transaction);
+        Task<IEnumerable<TransactionDto>> GetTransactions(int customerId);
+        Task<TransactionDto> GetTransaction(int customerId, int transactionId);
+        void AddTransaction(TransactionDto transaction);
     }
 }

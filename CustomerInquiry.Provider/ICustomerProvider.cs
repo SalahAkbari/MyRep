@@ -7,9 +7,9 @@ namespace CustomerInquiry.Provider
     public interface ICustomerProvider
     {
 
-        Task<IEnumerable<CustomerDTO>> GetAllCustomers();
-        Task<CustomerDTO> GetCustomer(int id, bool includeRelatedEntities = false);
-        CustomerDTO AddCustomer(CustomerBaseDTO customer);
+        Task<IEnumerable<CustomerDto>> GetAllCustomers();
+        Task<CustomerDto> GetCustomer(int id, bool includeRelatedEntities = false);
+        CustomerDto AddCustomer(CustomerBaseDto customer);
         Task<bool?> DeleteCustomer(int id);
     }
 }

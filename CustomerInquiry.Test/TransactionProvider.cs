@@ -18,17 +18,17 @@ namespace CustomerInquiry.Test
 
             AutoMapper.Mapper.Initialize(config =>
             {
-                config.CreateMap<TransactionDTO, TransactionBaseDTO>();
-                config.CreateMap<TransactionBaseDTO, TransactionDTO>();
+                config.CreateMap<TransactionDto, TransactionBaseDto>();
+                config.CreateMap<TransactionBaseDto, TransactionDto>();
             });
         }
 
-        public async Task<IEnumerable<TransactionDTO>> GetAllTransactions(int customerId)
+        public async Task<IEnumerable<TransactionDto>> GetAllTransactions(int customerId)
         {
             try
             {
                 var item = (await _rep.GetTransactions(customerId)).Where(b => b.CustomerId.Equals(customerId));
-                var DTOs = Mapper.Map<IEnumerable<TransactionDTO>>(item);
+                var DTOs = Mapper.Map<IEnumerable<TransactionDto>>(item);
                 return DTOs;
             }
             catch (Exception e)
@@ -38,7 +38,7 @@ namespace CustomerInquiry.Test
             }
         }
 
-        public async Task<TransactionDTO> GetTransaction(int customerId, int id)
+        public async Task<TransactionDto> GetTransaction(int customerId, int id)
         {
             try
             {
@@ -53,11 +53,11 @@ namespace CustomerInquiry.Test
             }
         }
 
-        public TransactionDTO AddTransaction(int customerId, TransactionBaseDTO transaction)
+        public TransactionDto AddTransaction(int customerId, TransactionBaseDto transaction)
         {
             try
             {
-                var itemToCreate = Mapper.Map<TransactionDTO>(transaction);
+                var itemToCreate = Mapper.Map<TransactionDto>(transaction);
                 itemToCreate.CustomerId = customerId;
                 _rep.AddTransaction(itemToCreate);
                 if (!_rep.Save()) return null;

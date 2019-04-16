@@ -12,51 +12,43 @@ namespace CustomerInquiry.Test
         {
             return true;
         }
-        public async Task AddCustomer(CustomerDTO Customer)
+        
+        public async Task<CustomerDto> GetCustomer(int customerId, bool includeTransactions = false)
         {
-            var id = (await GetCustomers()).Max(m => m.CustomerID) + 1;
-            Customer.CustomerID = id;
-            MockData.Current.Customers.Add(Customer);
+            throw new System.NotImplementedException();
         }
 
-        public async Task<CustomerDTO> GetCustomer(int CustomerId, bool includeTransactions = false)
+        public async Task<IEnumerable<CustomerDto>> GetCustomers()
         {
-            var Customer = await Task.FromResult(MockData.Current.Customers.FirstOrDefault(p => p.CustomerID.Equals(CustomerId)));
-
-            if (includeTransactions && Customer != null)
-            {
-                Customer.Transactions = MockData.Current.Transactions.Where(b => b.CustomerId.Equals(CustomerId)).ToList();
-            }
-
-            return Customer;
+            throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<CustomerDTO>> GetCustomers()
+        public bool CustomerExists(int customerId)
         {
-            return await Task.FromResult(MockData.Current.Customers);
+            return MockData.Current.Customers.Count(p => p.CustomerId.Equals(customerId)).Equals(1);
         }
 
-        public bool CustomerExists(int CustomerId)
-        {
-            return MockData.Current.Customers.Count(p => p.CustomerID.Equals(CustomerId)).Equals(1);
-        }
-
-        public async Task<IEnumerable<TransactionDTO>> GetTransactions(int customerId)
+        public async Task<IEnumerable<TransactionDto>> GetTransactions(int customerId)
         {
             return await Task.FromResult(MockData.Current.Transactions.Where(b => b.CustomerId.Equals(customerId)));
         }
 
-        public async Task<TransactionDTO> GetTransaction(int customerId, int transactionId)
+        public async Task<TransactionDto> GetTransaction(int customerId, int transactionId)
         {
             return await Task.FromResult(MockData.Current.Transactions.FirstOrDefault(b => b.CustomerId.Equals(customerId) 
-                     && b.TransactionID.Equals(transactionId)));
+                     && b.TransactionId.Equals(transactionId)));
         }
 
-        public void AddTransaction(TransactionDTO transaction)
+        public void AddTransaction(TransactionDto transaction)
         {
-            var id = MockData.Current.Transactions.Max(m => m.TransactionID) + 1;
-            transaction.TransactionID = id;
+            var id = MockData.Current.Transactions.Max(m => m.TransactionId) + 1;
+            transaction.TransactionId = id;
             MockData.Current.Transactions.Add(transaction);
+        }
+
+        public Task AddCustomer(CustomerDto customer)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

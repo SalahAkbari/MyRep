@@ -8,7 +8,7 @@ namespace CustomerInquiry.Controllers
     [Route("api/customers")]
     public class CustomerController : Controller
     {
-        private ICustomerProvider _provider;
+        private readonly ICustomerProvider _provider;
         public CustomerController(ICustomerProvider provider)
         {
             _provider = provider;
@@ -17,8 +17,8 @@ namespace CustomerInquiry.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var DTOs = await _provider.GetAllCustomers();
-            return Ok(DTOs);
+            var dtOs = await _provider.GetAllCustomers();
+            return Ok(dtOs);
         }
 
         [HttpGet("{id}", Name = "GetCustomer")]
@@ -31,13 +31,13 @@ namespace CustomerInquiry.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]CustomerBaseDTO DTO)
+        public IActionResult Post([FromBody]CustomerBaseDto dto)
         {
-            if (DTO == null) return BadRequest();
+            if (dto == null) return BadRequest();
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var result = _provider.AddCustomer(DTO);
-            if(result == null) return StatusCode(500, "A problem occurred while handling your request.");
-            return CreatedAtRoute("GetCustomer", new { id = result.CustomerID }, result);
+            var result = _provider.AddCustomer(dto);
+            return result == null ? StatusCode(500, "A problem occurred while handling your request.")
+                : CreatedAtRoute("GetCustomer", new { id = result.CustomerId }, result);
         }
 
         [HttpDelete("{id}")]

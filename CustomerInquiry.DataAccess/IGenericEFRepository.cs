@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace CustomerInquiry.DataAccess
 {
-    public interface IGenericEFRepository<TEntity> where TEntity : class
+    public interface IGenericEfRepository<TEntity> where TEntity : class
     {
         Task<IEnumerable<TEntity>> Get();
         Task<TEntity> Get(int id, bool includeRelatedEntities = false);

@@ -11,20 +11,20 @@ namespace CustomerInquiry.Provider
 {
     public class TransactionProvider : ITransactionProvider
     {
-        IGenericEFRepository<Transaction> _rep;
+        readonly IGenericEfRepository<Transaction> _rep;
 
-        public TransactionProvider(IGenericEFRepository<Transaction> rep)
+        public TransactionProvider(IGenericEfRepository<Transaction> rep)
         {
             _rep = rep;
         }
 
-        public async Task<IEnumerable<TransactionDTO>> GetAllTransactions(int customerId)
+        public async Task<IEnumerable<TransactionDto>> GetAllTransactions(int customerId)
         {
             try
             {
                 var item = (await _rep.Get()).Where(b => b.CustomerId.Equals(customerId));   
-                var DTOs = Mapper.Map<IEnumerable<TransactionDTO>>(item);
-                return DTOs;
+                var dtOs = Mapper.Map<IEnumerable<TransactionDto>>(item);
+                return dtOs;
             }
             catch (Exception e)
             {
@@ -33,14 +33,14 @@ namespace CustomerInquiry.Provider
             }
         }
 
-        public async Task<TransactionDTO> GetTransaction(int customerId, int id)
+        public async Task<TransactionDto> GetTransaction(int customerId, int id)
         {
             try
             {
                 var item = await _rep.Get(id);
                 if (item == null || !item.CustomerId.Equals(customerId)) return null;
-                var DTO = Mapper.Map<TransactionDTO>(item);
-                return DTO;
+                var dto = Mapper.Map<TransactionDto>(item);
+                return dto;
 
             }
             catch (Exception e)
@@ -50,7 +50,7 @@ namespace CustomerInquiry.Provider
             }
         }
 
-        public TransactionDTO AddTransaction(int customerId, TransactionBaseDTO transaction)
+        public TransactionDto AddTransaction(int customerId, TransactionBaseDto transaction)
         {
             try
             {
@@ -58,8 +58,8 @@ namespace CustomerInquiry.Provider
                 itemToCreate.CustomerId = customerId;
                 _rep.Add(itemToCreate);
                 if (!_rep.Save()) return null;
-                var createdDTO = Mapper.Map<TransactionDTO>(itemToCreate);
-                return createdDTO;
+                var createdDto = Mapper.Map<TransactionDto>(itemToCreate);
+                return createdDto;
             }
             catch (Exception e)
             {

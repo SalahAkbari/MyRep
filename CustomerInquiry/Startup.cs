@@ -32,18 +32,18 @@ namespace CustomerInquiry
             services.AddScoped(typeof(ICustomerProvider), typeof(CustomerProvider));
             services.AddScoped(typeof(ITransactionProvider), typeof(TransactionProvider));
 
-            services.AddScoped(typeof(IGenericEFRepository<>), typeof(GenericEFRepository<>));
+            services.AddScoped(typeof(IGenericEfRepository<>), typeof(GenericEfRepository<>));
 
             AutoMapper.Mapper.Initialize(config =>
             {
-                config.CreateMap<Transaction, TransactionBaseDTO>();
-                config.CreateMap<TransactionBaseDTO, Transaction>();
-                config.CreateMap<Transaction, TransactionDTO>();
-                config.CreateMap<TransactionDTO, Transaction>();
-                config.CreateMap<Customer, CustomerBaseDTO>();
-                config.CreateMap<CustomerBaseDTO, Customer>();
-                config.CreateMap<Customer, CustomerDTO>();
-                config.CreateMap<CustomerDTO, Customer>();
+                config.CreateMap<Transaction, TransactionBaseDto>();
+                config.CreateMap<TransactionBaseDto, Transaction>();
+                config.CreateMap<Transaction, TransactionDto>();
+                config.CreateMap<TransactionDto, Transaction>();
+                config.CreateMap<Customer, CustomerBaseDto>();
+                config.CreateMap<CustomerBaseDto, Customer>();
+                config.CreateMap<Customer, CustomerDto>();
+                config.CreateMap<CustomerDto, Customer>();
             });
 
             // Register the Swagger generator

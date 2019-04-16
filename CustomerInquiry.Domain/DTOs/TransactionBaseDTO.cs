@@ -1,10 +1,9 @@
 ﻿using CustomerInquiry.Domain.Enums;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace CustomerInquiry.Domain.DTOs
 {
-    public class TransactionBaseDTO
+    public class TransactionBaseDto
     {
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{dd/MM/yyyy HH:mm}")]
