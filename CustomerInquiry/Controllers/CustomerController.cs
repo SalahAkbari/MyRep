@@ -14,6 +14,17 @@ namespace CustomerInquiry.Controllers
             _provider = provider;
         }
 
+        /// <summary>
+        /// Get all Customers.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET/api/customers
+        ///
+        /// </remarks>
+        /// <returns code="200">A list of Customers</returns>
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -21,6 +32,20 @@ namespace CustomerInquiry.Controllers
             return Ok(dtOs);
         }
 
+        /// <summary>
+        /// Get a specific customer.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET/api/customers/{id}?includeRelatedEntities=true
+        ///
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <param name="includeRelatedEntities"></param>
+        /// <returns code="200">Get Successfull (Success Status Code)</returns>
+        /// <response code="400">If the CustomerDTO based on the customerId could not be found</response> 
+        /// 
         [HttpGet("{id}", Name = "GetCustomer")]
         public async Task<IActionResult> Get(int id, bool includeRelatedEntities = false)
         {
@@ -29,6 +54,24 @@ namespace CustomerInquiry.Controllers
             if (item == null) return NotFound();//404 Not Found (Client Error Status Code)
             return Ok(item);//Get Successfull (Success Status Code)
         }
+
+        /// <summary>
+        /// Creates a new Customer.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST/api/customers
+        ///     {
+        ///        "CustomerName": "string",
+        ///        "ContactEmail": "string",
+        ///        "MobileNo": "1234567890"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="dto"></param>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="500">If the dto is null or the ModelState is invalid</response> 
 
         [HttpPost]
         public IActionResult Post([FromBody]CustomerBaseDto dto)
@@ -40,6 +83,18 @@ namespace CustomerInquiry.Controllers
                 : CreatedAtRoute("GetCustomer", new { id = result.CustomerId }, result);
         }
 
+        /// <summary>
+        /// Delete a Customer.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     DELETE/api/customers/{id}
+        ///
+        /// </remarks>
+        /// <param name="id"></param>
+        /// <response code="204">No Content, for delete usually, successfull request that shouldn't return anything</response>
+        /// <response code="400">If the CustomerDTO based on the customerId could not be found</response> 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
