@@ -87,5 +87,30 @@ namespace CustomerInquiry.Test
             Assert.Equal(testTransactionId, ((TransactionDto) okResult.Value).TransactionId);
 
         }
+
+        [Fact]
+        public void Add_TransactionWithNewlyInvoice_ReturnsOKResult()
+        {
+            // Arrange
+            var theItem = new TransactionBaseDto
+            {
+                Amount = 2,
+                CurrencyCode = "USD",
+                Invoice = "InvoiceTest",
+                Status = Domain.Enums.StatusType.Success
+            };
+
+            // Act
+
+            //See how the ValidateViewModel extension method in the Helper class is useful here
+            _controller.ValidateViewModel(theItem);
+            //I have used the above useful extension method to simulate validation instead of adding customly like below
+            //_controller.ModelState.AddModelError("CustomerName", "Required");
+
+            var theResponse = _controller.Post(1, theItem);
+
+            // Assert
+            Assert.IsType<CreatedAtRouteResult>(theResponse);
+        }
     }
 }

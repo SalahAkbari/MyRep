@@ -10,6 +10,9 @@ namespace CustomerInquiry.Domain.DTOs
         public string TransactionDateTime { get; set; }
         [RegularExpression(@"\d+(\.\d{1,2})?", ErrorMessage = "Invalid price")]
         public decimal Amount { get; set; }
+        [MaxLength(30)]
+        public string Invoice { get; set; }
+
         [MaxLength(3)]
         public string CurrencyCode { get; set; }
         public StatusType Status { get; set; }

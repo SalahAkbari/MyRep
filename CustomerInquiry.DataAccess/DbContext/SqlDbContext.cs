@@ -11,5 +11,12 @@ namespace CustomerInquiry.DataAccess.DbContext
         public SqlDbContext(DbContextOptions<SqlDbContext> options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Transaction>()
+                        .HasIndex(u => u.Invoice)
+                        .IsUnique();
+        }
     }
 }

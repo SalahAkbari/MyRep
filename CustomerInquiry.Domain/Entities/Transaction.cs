@@ -17,6 +17,9 @@ namespace CustomerInquiry.Domain.Entities
         public decimal Amount { get; set; }
         [MaxLength(3)]
         public string CurrencyCode { get; set; }
+        [MaxLength(30)]
+        //[Index(IsUnique=true)]
+        public string Invoice { get; set; }
         public StatusType Status { get; set; }
 
         [ForeignKey("CustomerId")]
